@@ -17,10 +17,6 @@ class RobotGame(QWidget):
         # Affichage du robot
         self.robot_label = QLabel(self)
         self.robot_pixmap = QPixmap("neutre.png")  # Assurez-vous que l'image est dans le bon dossier
-        if not self.robot_pixmap.isNull():
-            print("Image 'robot_neutre.png' chargée avec succès.")
-        else:
-            print("Erreur de chargement de l'image 'robot_neutre.png'.")
         self.robot_pixmap = self.robot_pixmap.scaled(100, 100, Qt.AspectRatioMode.KeepAspectRatio)  # Redimensionner
         self.robot_label.setPixmap(self.robot_pixmap)
         self.robot_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -72,25 +68,24 @@ class RobotGame(QWidget):
             if user_answer == self.correct_answer:
                 self.result_label.setText("Bravo ! Vous avez trouvé la bonne réponse.")
                 self.robot_pixmap = QPixmap("happy.png")  # Remplacez par le chemin de votre image
-                if not self.robot_pixmap.isNull():
-                    print("Image 'robot_joyeux.png' chargée avec succès.")
-                else:
-                    print("Erreur de chargement de l'image 'happy.png'.")
-                self.robot_pixmap = self.robot_pixmap.scaled(100, 100, Qt.AspectRatioMode.KeepAspectRatio)  # Redimensionner l'image
+                self.robot_pixmap = self.robot_pixmap.scaled(self.robot_label.width(), self.robot_label.height(), Qt.AspectRatioMode.KeepAspectRatio)  # Adapter l'image à la taille de la fenêtre
                 self.generate_new_question()  # Nouvelle question après une bonne réponse
                 self.operation_label.setText(f"Quel est le résultat de {self.num1} {self.operation} {self.num2} ?")
                 self.answer_input.clear()  # Réinitialiser le champ de saisie
             else:
                 self.result_label.setText("Dommage ! Essayez encore.")
                 self.robot_pixmap = QPixmap("mecontent.gif")  # Remplacez par le chemin de votre image
-                if not self.robot_pixmap.isNull():
-                    print("Image 'robot_mecontent.png' chargée avec succès.")
-                else:
-                    print("Erreur de chargement de l'image 'robot_mecontent.png'.")
-                self.robot_pixmap = self.robot_pixmap.scaled(100, 100, Qt.AspectRatioMode.KeepAspectRatio)  # Redimensionner l'image
+                self.robot_pixmap = self.robot_pixmap.scaled(self.robot_label.width(), self.robot_label.height(), Qt.AspectRatioMode.KeepAspectRatio)  # Adapter l'image à la taille de la fenêtre
             self.robot_label.setPixmap(self.robot_pixmap)
         except ValueError:
             self.result_label.setText("Veuillez entrer un nombre valide.")
+
+    def resizeEvent(self, event):
+        """ Redimensionne l'image lorsque la fenêtre est redimensionnée """
+        if not self.robot_pixmap.isNull():
+            self.robot_pixmap = self.robot_pixmap.scaled(self.robot_label.width(), self.robot_label.height(), Qt.AspectRatioMode.KeepAspectRatio)
+            self.robot_label.setPixmap(self.robot_pixmap)
+        super().resizeEvent(event)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
